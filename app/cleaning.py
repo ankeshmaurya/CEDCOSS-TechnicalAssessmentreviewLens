@@ -22,6 +22,7 @@ class CleaningResult:
     skipped: list[dict]
     duplicates: list[dict]
     stats: dict
+    duplicate_details: list[dict] | None = None
 
 
 def _clean_whitespace(text: str) -> str:
@@ -78,6 +79,7 @@ def clean_reviews(csv_bytes: bytes) -> CleaningResult:
     valid: list[dict] = []
     skipped: list[dict] = []
     duplicates: list[dict] = []
+    duplicate_details: list[dict] = []
     seen_hashes: dict[str, str] = {}
     total_rows = 0
 
@@ -120,6 +122,14 @@ def clean_reviews(csv_bytes: bytes) -> CleaningResult:
                 "review_id": review_id,
                 "duplicate_of": duplicate_of,
             })
+            duplicate_details.append({
+                "review_id": review_id,
+                "product": _clean_whitespace(str(row.get("product") or "")),
+                "rating": _parse_rating(row.get("rating")),
+                "date": _clean_whitespace(str(row.get("date") or "")),
+                "review_text": review_text,
+                "text_hash": text_hash,
+            })
             continue
 
         seen_hashes[text_hash] = review_id
@@ -143,4 +153,5 @@ def clean_reviews(csv_bytes: bytes) -> CleaningResult:
         skipped=skipped,
         duplicates=duplicates,
         stats=stats,
+        duplicate_details=duplicate_details,
     )
