@@ -1,0 +1,35 @@
+:root {
+  color: #172033;
+  background: #f4f7fb;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 960px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+#cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.card,
+.review {
+  background: white;
+  border: 1px solid #dde3ec;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+button {
+  cursor: pointer;
+}

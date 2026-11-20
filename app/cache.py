@@ -89,3 +89,57 @@ def put(text_hash: str, result: dict, db_path: str | None = None) -> bool:
     finally:
         connection.close()
     return True
+
+
+def get_cache(key: str, db_path: str | None = None) -> dict | list | str | None:
+    from app.prompts import PROMPT_VERSION
+
+    connection = _connect(db_path)
+    try:
+        row = connection.execute(
+            """
+            SELECT result_json
+            FROM analysis_cache
+            WHERE text_hash = ? AND prompt_version = ?
+            """,
+            (_cache_key(key, PROMPT_VERSION), PROMPT_VERSION),
+        ).fetchone()
+    finally:
+        connection.close()
+    if row is None:
+        return None
+    return json.loads(row[0])
+
+
+def put_cache(
+    key: str,
+    value: dict | list | str,
+    db_path: str | None = None,
+) -> bool:
+    from app.prompts import PROMPT_VERSION
+
+    stored_key = _cache_key(key, PROMPT_VERSION)
+    created_at = datetime.now(timezone.utc).isoformat()
+    connection = _connect(db_path)
+    try:
+        connection.execute(
+            """
+            INSERT INTO analysis_cache
+                (text_hash, prompt_version, result_json, created_at)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(text_hash) DO UPDATE SET
+                prompt_version = excluded.prompt_version,
+                result_json = excluded.result_json,
+                created_at = excluded.created_at
+            """,
+            (
+                stored_key,
+                PROMPT_VERSION,
+                json.dumps(value, ensure_ascii=False),
+                created_at,
+            ),
+        )
+        connection.commit()
+    finally:
+        connection.close()
+    return True

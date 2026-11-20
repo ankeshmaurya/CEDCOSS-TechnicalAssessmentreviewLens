@@ -188,6 +188,7 @@ async def analyse_batch(
 def _ok_review(review: dict, analysis: dict) -> dict:
     return {
         "id": review["review_id"],
+        "text_hash": review.get("text_hash"),
         "product": review.get("product"),
         "rating": review.get("rating"),
         "date": review.get("date"),
@@ -204,6 +205,7 @@ def _ok_review(review: dict, analysis: dict) -> dict:
 def _failed_review(review: dict, error: str) -> dict:
     return {
         "id": review["review_id"],
+        "text_hash": review.get("text_hash"),
         "product": review.get("product"),
         "rating": review.get("rating"),
         "date": review.get("date"),

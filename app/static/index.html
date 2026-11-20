@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReviewLens</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main>
+    <h1>ReviewLens</h1>
+    <form id="upload-form">
+      <input id="csv-file" type="file" accept=".csv,text/csv" required>
+      <button type="submit">Analyse reviews</button>
+    </form>
+    <p id="message"></p>
+    <section id="cards"></section>
+    <section>
+      <h2>Top complaints</h2>
+      <ul id="complaints"></ul>
+    </section>
+    <section>
+      <h2>Top praises</h2>
+      <ul id="praises"></ul>
+    </section>
+    <section>
+      <h2>Reviews</h2>
+      <div id="reviews"></div>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
