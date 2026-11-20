@@ -5,6 +5,7 @@ import time
 from collections.abc import Awaitable, Callable
 
 from app.config import settings
+from app.cache import get_many, put
 from app.llm import ApiError, RateLimitError, ServerError, call_groq
 from app.prompts import build_messages
 from app.schema import validate_analysis
@@ -221,6 +222,7 @@ async def run_pipeline(
     cleaning_result,
     llm_func: LLMFunction = call_groq,
     sleep_func: SleepFunction = asyncio.sleep,
+    db_path: str | None = None,
 ) -> dict:
     started = time.perf_counter()
     valid = list(cleaning_result.valid)
@@ -234,8 +236,33 @@ async def run_pipeline(
     ai_calls = 0
     retries = 0
     cache_hits = 0
+    unique_hashes = list(dict.fromkeys(
+        str(review["text_hash"])
+        for review in valid
+    ))
+    cached_by_hash = get_many(unique_hashes, db_path)
 
-    for batch in chunk_reviews(valid):
+    uncached: list[dict] = []
+    cached_results: dict[str, dict] = {}
+    for review in valid:
+        text_hash = str(review["text_hash"])
+        cached = cached_by_hash.get(text_hash)
+        if cached is not None:
+            cached_result = _ok_review(review, {
+                "sentiment": cached["sentiment"],
+                "topics": cached["topics"],
+                "summary": cached["summary"],
+                "needs_reply": cached["needs_reply"],
+            })
+            cached_result["from_cache"] = True
+            cached_results[text_hash] = cached_result
+            continue
+        uncached.append(review)
+
+    results.extend(cached_results.values())
+    cache_hits += len(cached_results)
+
+    for batch in chunk_reviews(uncached):
         batch_results, batch_metrics = await analyse_batch(
             batch,
             llm_func,
@@ -243,6 +270,13 @@ async def run_pipeline(
         )
         ai_calls += batch_metrics["ai_calls"]
         retries += batch_metrics["retries"]
+        for batch_result in batch_results:
+            if batch_result["status"] == "ok":
+                original_review = next(
+                    review for review in batch
+                    if str(review["review_id"]) == str(batch_result["id"])
+                )
+                put(str(original_review["text_hash"]), batch_result, db_path)
         results.extend(batch_results)
 
     results_by_id = {str(item["id"]): item for item in results}
@@ -280,8 +314,13 @@ async def run_pipeline(
             if original["status"] == "analysis_failed"
             else "ok"
         )
+        if duplicate_result["status"] == "ok":
+            duplicate_result["from_cache"] = True
+        else:
+            duplicate_result["from_cache"] = False
         results.append(duplicate_result)
-        cache_hits += 1
+        if duplicate_result["status"] == "ok":
+            cache_hits += 1
 
     failed = sum(item["status"] == "analysis_failed" for item in results)
     return {
