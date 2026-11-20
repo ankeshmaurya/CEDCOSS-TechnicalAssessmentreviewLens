@@ -7,25 +7,92 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  <header class="topbar">
+    <div>
+      <h1>ReviewLens</h1>
+      <p>Turn reviews into store insights</p>
+    </div>
+  </header>
+
   <main>
-    <h1>ReviewLens</h1>
-    <form id="upload-form">
-      <input id="csv-file" type="file" accept=".csv,text/csv" required>
-      <button type="submit">Analyse reviews</button>
-    </form>
-    <p id="message"></p>
-    <section id="cards"></section>
-    <section>
-      <h2>Top complaints</h2>
-      <ul id="complaints"></ul>
+    <div id="error-banner" class="error-banner" role="alert" hidden></div>
+
+    <section class="upload-panel" aria-label="CSV upload">
+      <form id="upload-form">
+        <label for="csv-file">CSV file</label>
+        <input id="csv-file" type="file" accept=".csv,text/csv" required>
+        <button id="analyse-button" type="submit">Analyse</button>
+      </form>
     </section>
-    <section>
-      <h2>Top praises</h2>
-      <ul id="praises"></ul>
+
+    <section id="cards" class="cards" aria-label="Summary cards"></section>
+    <p id="metrics-line" class="metrics-line"></p>
+
+    <section class="theme-grid" aria-label="Review themes">
+      <article class="panel">
+        <h2>Top complaints</h2>
+        <ol id="complaints"></ol>
+      </article>
+      <article class="panel">
+        <h2>Top praises</h2>
+        <ol id="praises"></ol>
+      </article>
     </section>
-    <section>
-      <h2>Reviews</h2>
-      <div id="reviews"></div>
+
+    <section class="reviews-section">
+      <div class="reviews-heading">
+        <h2>Reviews</h2>
+        <span id="review-count"></span>
+      </div>
+
+      <div class="filters">
+        <label>Product
+          <select id="product-filter">
+            <option value="">All products</option>
+          </select>
+        </label>
+        <label>Sentiment
+          <select id="sentiment-filter">
+            <option value="">All sentiments</option>
+            <option value="positive">Positive</option>
+            <option value="neutral">Neutral</option>
+            <option value="negative">Negative</option>
+          </select>
+        </label>
+        <label>Topic
+          <select id="topic-filter">
+            <option value="">All topics</option>
+            <option value="quality">Quality</option>
+            <option value="delivery">Delivery</option>
+            <option value="price">Price</option>
+            <option value="packaging">Packaging</option>
+            <option value="support">Support</option>
+            <option value="size_fit">Size fit</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label class="toggle">
+          <input id="reply-filter" type="checkbox">
+          Needs reply
+        </label>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product</th>
+              <th>Rating</th>
+              <th>Sentiment</th>
+              <th>Topics</th>
+              <th>Summary</th>
+              <th>Reply</th>
+            </tr>
+          </thead>
+          <tbody id="reviews-body"></tbody>
+        </table>
+      </div>
     </section>
   </main>
   <script src="/static/app.js"></script>
