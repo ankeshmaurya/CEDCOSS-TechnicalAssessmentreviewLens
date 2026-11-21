@@ -151,18 +151,15 @@ With more time, I would improve these areas:
 
 GitHub Copilot and the Copilot SDK were used as coding assistants during development. They helped inspect and edit Python modules, identify unused imports, add Docker configuration, pin compatible pytest dependencies, run tests, and write this documentation. Final behaviour was checked by running the test suite and Docker Compose configuration locally.
 
+
+
 ## Screenshots
 
-Place captured application screenshots in `docs/screenshots/`.
+### Dashboard
+![ReviewLens dashboard](docs/dashboard.png)
 
-![ReviewLens dashboard](docs/screenshots/dashboard.png)
+### CSV upload and analysis
+![ReviewLens CSV upload](docs/upload.png)
 
-*Placeholder: add a screenshot of the main dashboard with uploaded reviews and metrics.*
-
-![ReviewLens CSV upload](docs/screenshots/upload.png)
-
-*Placeholder: add a screenshot of the CSV upload and analysis state.*
-
-![ReviewLens reply suggestion](docs/screenshots/reply.png)
-
-*Placeholder: add a screenshot of a suggested customer reply.*
+### Suggested reply
+![ReviewLens reply suggestion](docs/reply.png)
