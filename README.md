@@ -156,10 +156,10 @@ GitHub Copilot and the Copilot SDK were used as coding assistants during develop
 ## Screenshots
 
 ### Dashboard
-![ReviewLens dashboard](docs/dashboard.png)
+![ReviewLens dashboard](dashboard-overview.png)
 
 ### CSV upload and analysis
-![ReviewLens CSV upload](docs/upload.png)
+![ReviewLens CSV upload](dashboard-table.png)
 
 ### Suggested reply
-![ReviewLens reply suggestion](docs/reply.png)
+![ReviewLens reply suggestion](suggested-reply.png)
