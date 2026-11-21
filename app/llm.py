@@ -2,7 +2,6 @@ import httpx
 
 from app.config import settings
 
-
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 

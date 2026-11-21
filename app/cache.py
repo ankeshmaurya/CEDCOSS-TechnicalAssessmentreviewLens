@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from app.config import settings
@@ -69,7 +69,7 @@ def put(text_hash: str, result: dict, db_path: str | None = None) -> bool:
 
     stored_key = _cache_key(text_hash, PROMPT_VERSION)
     result_json = json.dumps(result, ensure_ascii=False)
-    created_at = datetime.now(timezone.utc).isoformat()
+    created_at = datetime.now(UTC).isoformat()
 
     connection = _connect(db_path)
     try:
@@ -119,7 +119,7 @@ def put_cache(
     from app.prompts import PROMPT_VERSION
 
     stored_key = _cache_key(key, PROMPT_VERSION)
-    created_at = datetime.now(timezone.utc).isoformat()
+    created_at = datetime.now(UTC).isoformat()
     connection = _connect(db_path)
     try:
         connection.execute(

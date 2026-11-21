@@ -4,12 +4,11 @@ import random
 import time
 from collections.abc import Awaitable, Callable
 
-from app.config import settings
 from app.cache import get_many, put
+from app.config import settings
 from app.llm import ApiError, RateLimitError, ServerError, call_groq
 from app.prompts import build_messages
 from app.schema import validate_analysis
-
 
 LLMFunction = Callable[[list[dict]], Awaitable[dict]]
 SleepFunction = Callable[[float], Awaitable[None]]

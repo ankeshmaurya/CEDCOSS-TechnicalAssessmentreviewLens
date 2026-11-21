@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, UploadFile, File, Request
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -9,7 +9,6 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.cleaning import clean_reviews
 from app.insights import build_themes, generate_reply
 from app.pipeline import run_pipeline
-
 
 app = FastAPI(title="ReviewLens")
 LATEST_RUN: dict | None = None

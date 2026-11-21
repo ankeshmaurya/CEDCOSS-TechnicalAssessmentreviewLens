@@ -1,6 +1,5 @@
 import json
 
-
 PROMPT_VERSION = "v1"
 
 

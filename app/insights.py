@@ -8,7 +8,6 @@ from app.llm import ApiError, RateLimitError, ServerError, call_groq
 from app.pipeline import call_with_backoff
 from app.schema import ALLOWED_TOPICS
 
-
 LLMFunction = Callable[[list[dict]], Awaitable[dict]]
 
 
